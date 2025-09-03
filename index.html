@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+    textarea {
+      padding: 10px;
+      font-size: 1em;
+      resize: vertical;
+    }
+    button {
+      padding: 10px;
+      background: #0366d6;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #024ea2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Submit Your Text</h1>
+  <form action="https://example.com/submit" method="POST">
+    <textarea name="message" rows="6" placeholder="Type your message here..."></textarea>
+    <button type="submit">Send</button>
+  </form>
+</body>
+</html>
