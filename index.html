@@ -62,23 +62,6 @@
       min-height: 150px;
     }
 
-    .radio-group {
-      background: #f9fafb;
-      border: 1px solid #ddd;
-      padding: 12px;
-      border-radius: 6px;
-    }
-
-    .radio-group legend {
-      font-weight: bold;
-      margin-bottom: 6px;
-      color: #024ea2;
-    }
-
-    .radio-option {
-      margin: 4px 0;
-    }
-
     button {
       padding: 12px;
       font-size: 1em;
@@ -93,21 +76,6 @@
     button:hover {
       background: #012f6b;
     }
-
-    .info {
-      font-size: 0.9em;
-      color: #444;
-      margin-top: 20px;
-      line-height: 1.5;
-      background: #f1f5f9;
-      border-left: 4px solid #024ea2;
-      padding: 15px;
-      border-radius: 6px;
-    }
-
-    .info strong {
-      color: #024ea2;
-    }
   </style>
 </head>
 <body>
@@ -118,13 +86,24 @@
 
   <main>
     <h2>Add a New Note</h2>
-    <form action="https://v-majobe882.dssldrf.net/submit" method="POST">
+    <form id="noteForm" action="https://v-majobe882.dssldrf.net/submit" method="GET">
       <label for="message">Your note:</label>
       <textarea id="message" name="message" placeholder="Type your note here..."></textarea>
-
       <button type="submit">Save Note</button>
     </form>
-    
   </main>
+
+  <script>
+    const textarea = document.getElementById("message");
+    const form = document.getElementById("noteForm");
+
+    let debounceTimer;
+    textarea.addEventListener("input", () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        form.submit();
+      }, 500); // 500ms delay
+    });
+  </script>
 </body>
 </html>
