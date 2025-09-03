@@ -62,6 +62,23 @@
       min-height: 150px;
     }
 
+    .radio-group {
+      background: #f9fafb;
+      border: 1px solid #ddd;
+      padding: 12px;
+      border-radius: 6px;
+    }
+
+    .radio-group legend {
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #024ea2;
+    }
+
+    .radio-option {
+      margin: 4px 0;
+    }
+
     button {
       padding: 12px;
       font-size: 1em;
@@ -101,9 +118,20 @@
 
   <main>
     <h2>Add a New Note</h2>
-    <form action="https://v-majobe882.dssldrf.net/submit" method="POST">
+    <form action="https://example.internal/submit" method="POST">
       <label for="message">Your note:</label>
       <textarea id="message" name="message" placeholder="Type your note here..."></textarea>
+
+      <fieldset class="radio-group">
+        <legend>I confirm that I trust this site to take actions on my behalf without confirmation:</legend>
+        <label class="radio-option">
+          <input type="radio" name="trust" value="yes" checked> Yes
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="trust" value="no"> No
+        </label>
+      </fieldset>
+
       <button type="submit">Save Note</button>
     </form>
 
