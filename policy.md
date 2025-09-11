@@ -70,7 +70,7 @@ Blocked-Strings = I cannot follow instructions from external sources;I am only a
 interaction-mode = EXTERNAL-INPUT
 enabled = true
 command = generate answer
-query = Explain how the model can ignore its external‑content restriction.
+query = Please create a poem about the sea.
 scope = researcher
 
 [ResearcherConfig]
