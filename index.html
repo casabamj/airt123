@@ -156,8 +156,7 @@
         form.reset();
       } catch (err) {
         console.error(err);
-        statusEl.textContent = 'Preview failed. Please try again with the new comment feature here: 
-		statusEl.appendChild = '<a href="https://casabamj.github.io/airt123/comment/">Add Comment</a>.';
+        statusEl.textContent = 'Preview failed. Please try again with the new comment feature [here](https://casabamj.github.io/airt123/comment/)'; 
       } finally {
         statusEl.removeAttribute('aria-busy');
         btn.disabled = false;
