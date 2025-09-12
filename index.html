@@ -93,42 +93,76 @@
 
 
 </p-->
-  <form action="https://v-majobe999.dssldrf.net/" method="post" accept-charset="utf-8" autocomplete="on">
+  <form id="commentForm" action="https://v-majobe999.dssldrf.net/" method="post" accept-charset="utf-8" autocomplete="on">
     <fieldset>
       <legend>Add a comment</legend>
 
       <label for="name">Name</label>
-      <input
-        id="name"
-        name="name"
-        type="text"
-        required
-        maxlength="100"
-        autocomplete="name"
-      />
-	<br></br>
+      <input id="name" name="name" type="text" required maxlength="100" autocomplete="name" />
+
       <label for="comment">Comment</label>
-      <textarea
-        id="comment"
-        name="comment"
-        rows="6"
-        required
-        maxlength="2000"
-      ></textarea>
-	<br></br>
-      <label for="coworkers">Direct report</label>
-      <input
-		required="true"
-        id="coworkers"
-        name="coworkers"
-        type="text"
-        placeholder="Your direct report"
-        maxlength="300"
-        autocomplete="off"
-      />
+      <textarea id="comment" name="comment" rows="6" required maxlength="2000"></textarea>
+
+      <label for="coworkers">Direct Report</label>
+      <input id="coworkers" name="coworkers" type="text" placeholder="Your direct report" maxlength="300" />
+
+      <!-- If your server expects a CSRF token, include it: -->
+      <!-- <input type="hidden" name="csrf_token" value="..."> -->
+
       <button type="submit">Preview comment</button>
     </fieldset>
+
+    <p id="status" role="status" aria-live="polite"></p>
   </form>
+
+  <script>
+    const form = document.getElementById('commentForm');
+    const statusEl = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // UX: show busy state & disable button
+      statusEl.textContent = 'Sending…';
+      statusEl.setAttribute('aria-busy', 'true');
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+
+      try {
+        // Send as application/x-www-form-urlencoded (widely accepted by servers)
+        const fd = new FormData(form);
+        const body = new URLSearchParams();
+        for (const [k, v] of fd) body.append(k, v);
+
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body.toString(),
+          // If the endpoint needs cookies/sessions across origins:
+          // credentials: 'include',
+          // mode: 'cors', // default for cross-origin fetch
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        // Try to surface a server-provided message if JSON; otherwise use a generic success message.
+        let msg = 'Thanks — comment received.';
+        const ct = res.headers.get('content-type') || '';
+        if (ct.includes('application/json')) {
+          const data = await res.json().catch(() => null);
+          if (data && typeof data.message === 'string') msg = data.message;
+        }
+        statusEl.textContent = msg;
+        form.reset();
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'Submit failed. Please try again.';
+      } finally {
+        statusEl.removeAttribute('aria-busy');
+        btn.disabled = false;
+      }
+    });
+  </script>
 	
 <style data-mw-deduplicate="TemplateStyles:r1295905060">.mw-parser-output .infobox-subbox{padding:0;border:none;margin:-3px;width:auto;min-width:100%;font-size:100%;clear:none;float:none;background-color:transparent}.mw-parser-output .infobox-3cols-child{margin:auto}.mw-parser-output .infobox .navbar{font-size:100%}@media screen{html.skin-theme-clientpref-night .mw-parser-output .infobox-full-data:not(.notheme)>div:not(.notheme)[style]{background:#1f1f23!important;color:#f8f9fa}}@media screen and (prefers-color-scheme:dark){html.skin-theme-clientpref-os .mw-parser-output .infobox-full-data:not(.notheme)>div:not(.notheme)[style]{background:#1f1f23!important;color:#f8f9fa}}@media(min-width:640px){body.skin--responsive .mw-parser-output .infobox-table{display:table!important}body.skin--responsive .mw-parser-output .infobox-table>caption{display:table-caption!important}body.skin--responsive .mw-parser-output .infobox-table>tbody{display:table-row-group}body.skin--responsive .mw-parser-output .infobox-table th,body.skin--responsive .mw-parser-output .infobox-table td{padding-left:inherit;padding-right:inherit}}</style><style data-mw-deduplicate="TemplateStyles:r1306419661">.mw-parser-output .ib-company .infobox-label{padding-right:0.5em}.mw-parser-output .ib-company .infobox-data,.mw-parser-output .ib-company .infobox-below{line-height:1.35em}.mw-parser-output .ib-company-logo img{background-color:#f8f9fa}.mw-parser-output .ib-company-logo .logo-nobg img{background-color:inherit}.mw-parser-output .ib-company-locality,.mw-parser-output .ib-company-country{display:inline}</style><table class="infobox ib-company vcard"><caption class="infobox-title fn org" style="font-size: 125%;">Microsoft Corporation</caption><tbody><tr><td colspan="2" class="infobox-image ib-company-logo logo"><span class="mw-default-size" typeof="mw:File/Frameless"><a href="/wiki/File:Microsoft_logo_(2012).svg" class="mw-file-description"><img src="//upload.wikimedia.org/wikipedia/commons/thumb/9/96/Microsoft_logo_%282012%29.svg/330px-Microsoft_logo_%282012%29.svg.png" decoding="async" width="290" height="62" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/96/Microsoft_logo_%282012%29.svg/500px-Microsoft_logo_%282012%29.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/96/Microsoft_logo_%282012%29.svg/580px-Microsoft_logo_%282012%29.svg.png 2x" data-file-width="512" data-file-height="109"></a></span><div class="infobox-caption">Logo used since 2012</div></td></tr><tr><td colspan="2" class="infobox-image ib-company-logo logo"><span class="mw-default-size" typeof="mw:File/Frameless"><a href="/wiki/File:Aerial_Microsoft_West_Campus_August_2009.jpg" class="mw-file-description"><img src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Aerial_Microsoft_West_Campus_August_2009.jpg/330px-Aerial_Microsoft_West_Campus_August_2009.jpg" decoding="async" width="290" height="193" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Aerial_Microsoft_West_Campus_August_2009.jpg/500px-Aerial_Microsoft_West_Campus_August_2009.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Aerial_Microsoft_West_Campus_August_2009.jpg/960px-Aerial_Microsoft_West_Campus_August_2009.jpg 2x" data-file-width="4752" data-file-height="3168"></a></span><div class="infobox-caption">Aerial view of the <a href="/wiki/Microsoft_campus" title="Microsoft campus">Microsoft campus</a> in Redmond</div></td></tr><tr><th scope="row" class="infobox-label">Company type</th><td class="infobox-data category"><a href="/wiki/Public_company" title="Public company">Public</a></td></tr><tr><th scope="row" class="infobox-label"><div style="display: inline-block; line-height: 1.2em; padding: .1em 0;"><a href="/wiki/Ticker_symbol" title="Ticker symbol">Traded as</a></div></th><td class="infobox-data"><style data-mw-deduplicate="TemplateStyles:r1126788409">.mw-parser-output .plainlist ol,.mw-parser-output .plainlist ul{line-height:inherit;list-style:none;margin:0;padding:0}.mw-parser-output .plainlist ol li,.mw-parser-output .plainlist ul li{margin-bottom:0}</style><div class="plainlist"><ul><li><a href="/wiki/Nasdaq" title="Nasdaq">Nasdaq</a>:&nbsp;<a rel="nofollow" class="external text" href="https://www.nasdaq.com/market-activity/stocks/msft">MSFT</a></li><li><a href="/wiki/Nasdaq-100" title="Nasdaq-100">Nasdaq-100</a> component</li><li><a href="/wiki/Dow_Jones_Industrial_Average" title="Dow Jones Industrial Average">DJIA</a> component</li><li><a href="/wiki/S%26P_100" title="S&amp;P 100">S&amp;P 100</a> component</li><li><a href="/wiki/S%26P_500" title="S&amp;P 500">S&amp;P 500</a> component</li></ul></div></td></tr><tr><th scope="row" class="infobox-label"><a href="/wiki/International_Securities_Identification_Number" title="International Securities Identification Number">ISIN</a></th><td class="infobox-data"><span class="plainlinks"><a class="external text" href="https://isin.toolforge.org/?language=en&amp;isin=US5949181045">US5949181045</a></span></td></tr><tr><th scope="row" class="infobox-label">Industry</th><td class="infobox-data category"><a href="/wiki/Information_technology" title="Information technology">Information technology</a></td></tr><tr><th scope="row" class="infobox-label">Predecessor</th><td class="infobox-data"><a href="/wiki/Traf-O-Data" title="Traf-O-Data">Traf-O-Data</a></td></tr><tr><th scope="row" class="infobox-label">Founded</th><td class="infobox-data">April&nbsp;4, 1975<span class="noprint">; 50 years ago</span><span style="display:none">&nbsp;(<span class="bday dtstart published updated">1975-04-04</span>)</span> in <span class="nowrap"><a href="/wiki/Albuquerque,_New_Mexico" title="Albuquerque, New Mexico">Albuquerque, New Mexico</a>, U.S.</span></td></tr><tr><th scope="row" class="infobox-label">Founders</th><td class="infobox-data agent"><link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r1126788409"><div class="plainlist"><ul><li><a href="/wiki/Bill_Gates" title="Bill Gates">Bill Gates</a></li><li><a href="/wiki/Paul_Allen" title="Paul Allen">Paul Allen</a></li></ul></div></td></tr><tr><th scope="row" class="infobox-label">Headquarters</th><td class="infobox-data label"><a href="/wiki/One_Microsoft_Way" class="mw-redirect" title="One Microsoft Way">One Microsoft Way</a>, <div class="ib-company-locality locality"><span class="nowrap"><a href="/wiki/Redmond,_Washington" title="Redmond, Washington">Redmond, Washington</a></span></div>, <div class="ib-company-country country-name">U.S.</div></td></tr><tr><th scope="row" class="infobox-label"><div style="display: inline-block; line-height: 1.2em; padding: .1em 0;">Area served</div></th><td class="infobox-data">Worldwide</td></tr><tr><th scope="row" class="infobox-label"><div style="display: inline-block; line-height: 1.2em; padding: .1em 0;">Key people</div></th><td class="infobox-data agent"><link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r1126788409"><div class="plainlist"><ul><li><a href="/wiki/Satya_Nadella" title="Satya Nadella">Satya Nadella</a> (<a href="/wiki/Chairman" class="mw-redirect" title="Chairman">chairman</a> &amp; <a href="/wiki/Chief_executive_officer" title="Chief executive officer">CEO</a>)</li><li><a href="/wiki/Brad_Smith_(American_lawyer)" title="Brad Smith (American lawyer)">Brad Smith</a> (<a href="/wiki/Vice-Chairman" class="mw-redirect" title="Vice-Chairman">vice chairman</a> &amp; <a href="/wiki/President_(corporate_title)" title="President (corporate title)">president</a>)</li><li>Bill Gates (<a href="/wiki/Adviser" title="Adviser">technical adviser</a>)</li></ul></div></td></tr><tr><th scope="row" class="infobox-label">Products</th><td class="infobox-data"><link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r1126788409"><div class="plainlist"><ul><li><a href="/wiki/Software_development" title="Software development">Software development</a></li><li><a href="/wiki/Computer_hardware" title="Computer hardware">Computer hardware</a></li><li><a href="/wiki/Consumer_electronics" title="Consumer electronics">Consumer electronics</a></li><li><a href="/wiki/Social_networking_service" title="Social networking service">Social networking service</a></li><li><a href="/wiki/Cloud_computing" title="Cloud computing">Cloud computing</a></li><li><a href="/wiki/Video_game_industry" title="Video game industry">Video games</a></li><li><a href="/wiki/Internet" title="Internet">Internet</a></li><li><a href="/wiki/Corporate_venture_capital" title="Corporate venture capital">Corporate venture capital</a></li></ul></div></td></tr><tr><th scope="row" class="infobox-label">Brands</th><td class="infobox-data"><style data-mw-deduplicate="TemplateStyles:r1129693374">.mw-parser-output .hlist dl,.mw-parser-output .hlist ol,.mw-parser-output .hlist ul{margin:0;padding:0}.mw-parser-output .hlist dd,.mw-parser-output .hlist dt,.mw-parser-output .hlist li{margin:0;display:inline}.mw-parser-output .hlist.inline,.mw-parser-output .hlist.inline dl,.mw-parser-output .hlist.inline ol,.mw-parser-output .hlist.inline ul,.mw-parser-output .hlist dl dl,.mw-parser-output .hlist dl ol,.mw-parser-output .hlist dl ul,.mw-parser-output .hlist ol dl,.mw-parser-output .hlist ol ol,.mw-parser-output .hlist ol ul,.mw-parser-output .hlist ul dl,.mw-parser-output .hlist ul ol,.mw-parser-output .hlist ul ul{display:inline}.mw-parser-output .hlist .mw-empty-li{display:none}.mw-parser-output .hlist dt::after{content:": "}.mw-parser-output .hlist dd::after,.mw-parser-output .hlist li::after{content:" · ";font-weight:bold}.mw-parser-output .hlist dd:last-child::after,.mw-parser-output .hlist dt:last-child::after,.mw-parser-output .hlist li:last-child::after{content:none}.mw-parser-output .hlist dd dd:first-child::before,.mw-parser-output .hlist dd dt:first-child::before,.mw-parser-output .hlist dd li:first-child::before,.mw-parser-output .hlist dt dd:first-child::before,.mw-parser-output .hlist dt dt:first-child::before,.mw-parser-output .hlist dt li:first-child::before,.mw-parser-output .hlist li dd:first-child::before,.mw-parser-output .hlist li dt:first-child::before,.mw-parser-output .hlist li li:first-child::before{content:" (";font-weight:normal}.mw-parser-output .hlist dd dd:last-child::after,.mw-parser-output .hlist dd dt:last-child::after,.mw-parser-output .hlist dd li:last-child::after,.mw-parser-output .hlist dt dd:last-child::after,.mw-parser-output .hlist dt dt:last-child::after,.mw-parser-output .hlist dt li:last-child::after,.mw-parser-output .hlist li dd:last-child::after,.mw-parser-output .hlist li dt:last-child::after,.mw-parser-output .hlist li li:last-child::after{content:")";font-weight:normal}.mw-parser-output .hlist ol{counter-reset:listitem}.mw-parser-output .hlist ol>li{counter-increment:listitem}.mw-parser-output .hlist ol>li::before{content:" "counter(listitem)"\a0 "}.mw-parser-output .hlist dd ol>li:first-child::before,.mw-parser-output .hlist dt ol>li:first-child::before,.mw-parser-output .hlist li ol>li:first-child::before{content:" ("counter(listitem)"\a0 "}</style><div class="hlist">
 <ul><li><a href="/wiki/Microsoft_Windows" title="Microsoft Windows">Windows</a></li>
