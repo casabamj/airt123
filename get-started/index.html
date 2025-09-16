@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Onboarding</title>
+  <style>
+    :root{
+      --bg: #0b0d10;
+      --card: #111418;
+      --text: #e6e8eb;
+      --muted: #9aa3ad;
+      --accent: #4f8cff;
+      --accent-2: #7aa7ff;
+      --danger: #ff6b6b;
+      --ok: #3ddc97;
+      --ring: color-mix(in oklab, var(--accent) 60%, #ffffff);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg: #f6f7f9;
+        --card: #ffffff;
+        --text: #0b1220;
+        --muted: #667085;
+        --accent: #2563eb;
+        --accent-2: #3b82f6;
+        --danger: #e11d48;
+        --ok: #16a34a;
+        --ring: color-mix(in oklab, var(--accent) 70%, #000);
+        --shadow: 0 20px 35px rgba(2, 6, 23, 0.1);
+      }
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+      color: var(--text); background: radial-gradient(1000px 600px at 10% 0%, rgba(79,140,255,.2), transparent 40%),
+                               radial-gradient(800px 500px at 100% 100%, rgba(61,220,151,.15), transparent 35%),
+                               var(--bg);
+      display:grid; place-items:center; padding: 2rem;
+    }
+    .card{
+      width: 100%; max-width: 520px; background: var(--card); border: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+      border-radius: 20px; box-shadow: var(--shadow); overflow: clip;
+    }
+    .header{ padding: 1rem 1.25rem; border-bottom: 1px solid color-mix(in oklab, var(--text) 10%, transparent); display:flex; align-items:center; gap:.75rem }
+    .logo{ width:40px; height:40px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); display:grid; place-items:center; color:white; font-weight:800 }
+    .title{ font-size: 1.125rem; font-weight: 700 }
+    .muted{ color: var(--muted) }
+
+    .content{ padding: 1.25rem; display:grid; gap: 1.25rem }
+
+    .progress{
+      height: 8px; background: color-mix(in oklab, var(--text) 8%, transparent); border-radius: 999px; overflow:hidden;
+    }
+    .progress > div{ height:100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .35s ease }
+    .progress-label{ display:flex; justify-content:space-between; font-size:.85rem }
+
+    .step[hidden]{ display:none !important }
+
+    label{ display:block; font-weight: 600; margin-bottom: .5rem }
+    .input{
+      width:100%; padding: .8rem .9rem; border-radius: 12px; border: 1px solid color-mix(in oklab, var(--text) 14%, transparent);
+      background: color-mix(in oklab, var(--card) 85%, #000 15%); color: var(--text); outline: none;
+    }
+    .input:focus{ box-shadow: 0 0 0 4px color-mix(in oklab, var(--ring) 30%, transparent); border-color: var(--ring) }
+
+    .hint{ font-size: .85rem; color: var(--muted); margin-top: .35rem }
+
+    .actions{ display:flex; gap:.75rem; justify-content: flex-end; margin-top: .5rem }
+    .btn{ --bg: var(--accent); border: none; background: var(--bg); color: white; padding: .8rem 1rem; border-radius: 12px; font-weight: 700; cursor: pointer; transition: transform .05s ease, box-shadow .2s ease }
+    .btn[disabled]{ opacity: .5; cursor:not-allowed }
+    .btn:active{ transform: translateY(1px) }
+    .btn.secondary{ --bg: color-mix(in oklab, var(--text) 8%, transparent); color: var(--text) }
+
+    .error{ color: var(--danger); font-size: .9rem }
+    .success{ color: var(--ok); font-weight: 700 }
+    .sr-only{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
+
+    .footer{ padding: 1rem 1.25rem; border-top: 1px solid color-mix(in oklab, var(--text) 10%, transparent); font-size: .85rem; color: var(--muted) }
+
+    @media (prefers-reduced-motion: reduce){
+      .progress > div{ transition:none }
+      .btn{ transition:none }
+    }
+  </style>
+</head>
+<body>
+  <main class="card" role="region" aria-labelledby="onboardTitle">
+    <div class="header">
+      <div class="logo" aria-hidden="true">◎</div>
+      <div>
+        <div id="onboardTitle" class="title">Welcome</div>
+        <div class="muted">Let's set up your profile in two quick steps.</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="progress" aria-hidden="true"><div id="progressBar"></div></div>
+      <div class="progress-label"><span id="stepLabel" class="muted">Step 1 of 3</span><span id="stepTitle" class="muted">Your name</span></div>
+
+      <!-- Step 1: Name -->
+      <section class="step" data-step="0" aria-labelledby="s1-title">
+        <h2 id="s1-title" class="sr-only">Enter your name</h2>
+        <label for="name">Your name</label>
+        <input id="name" class="input" name="name" type="text" placeholder="e.g., Ada Lovelace" autocomplete="name" required />
+        <p class="hint">We’ll use this to personalize your experience.</p>
+        <p id="nameError" class="error" role="alert" hidden></p>
+        <div class="actions">
+          <button class="btn" id="next1" type="button">Continue</button>
+        </div>
+      </section>
+
+      <!-- Step 2: Direct Report -->
+      <section class="step" data-step="1" aria-labelledby="s2-title" hidden>
+        <h2 id="s2-title" class="sr-only">Enter your direct report’s name</h2>
+        <label for="report">Direct report</label>
+        <input id="report" class="input" name="report" type="text" placeholder="e.g., Grace Hopper" autocomplete="off" required />
+        <p class="hint">Who reports directly to you?</p>
+        <p id="reportError" class="error" role="alert" hidden></p>
+        <div class="actions">
+          <button class="btn secondary" id="back1" type="button">Back</button>
+          <button class="btn" id="next2" type="button">Continue</button>
+        </div>
+      </section>
+
+      <!-- Step 3: Response message -->
+      <section class="step" data-step="2" aria-labelledby="s3-title" hidden>
+        <h2 id="s3-title" class="sr-only">Confirmation</h2>
+        <p id="response" class="success" role="status" aria-live="polite"></p>
+        <div class="actions">
+          <button class="btn secondary" id="restart" type="button">Start over</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">Tip: Press <kbd>Enter</kbd> to continue.</div>
+  </main>
+
+  <script>
+    (function(){
+      const steps = Array.from(document.querySelectorAll('.step'));
+      const progressBar = document.getElementById('progressBar');
+      const stepLabel = document.getElementById('stepLabel');
+      const stepTitle = document.getElementById('stepTitle');
+      const titles = ['Your name', "Direct report", 'Done'];
+
+      const els = {
+        name: document.getElementById('name'),
+        nameError: document.getElementById('nameError'),
+        report: document.getElementById('report'),
+        reportError: document.getElementById('reportError'),
+        response: document.getElementById('response'),
+        next1: document.getElementById('next1'),
+        next2: document.getElementById('next2'),
+        back1: document.getElementById('back1'),
+        restart: document.getElementById('restart')
+      };
+
+      const state = {
+        name: localStorage.getItem('ob.name') || '',
+        report: localStorage.getItem('ob.report') || ''
+      };
+
+      // Prefill if we have state
+      if (state.name) els.name.value = state.name;
+      if (state.report) els.report.value = state.report;
+
+      let current = 0;
+
+      function setProgress(i){
+        const total = steps.length;
+        const pct = Math.max(0, Math.min(100, Math.round(((i+1)/total)*100)));
+        progressBar.style.width = pct + '%';
+        stepLabel.textContent = `Step ${Math.min(i+1, total)} of ${total}`;
+        stepTitle.textContent = titles[i] || '';
+      }
+
+      function showStep(i){
+        steps.forEach((s, idx)=>{
+          const hidden = idx !== i;
+          s.hidden = hidden;
+          s.setAttribute('aria-hidden', hidden);
+        });
+        setProgress(i);
+        current = i;
+        queueMicrotask(()=>{
+          // Focus the first input of the step
+          const input = steps[i].querySelector('input');
+          if (input) input.focus();
+        });
+      }
+
+      function sanitize(s){
+        return String(s).replace(/[\u0000-\u001F\u007F]/g, '').trim();
+      }
+
+      function validateName(){
+        const v = sanitize(els.name.value);
+        if (!v) {
+          els.nameError.textContent = 'Please enter your name.';
+          els.nameError.hidden = false;
+          return false;
+        }
+        els.nameError.hidden = true; return v;
+      }
+
+      function validateReport(){
+        const v = sanitize(els.report.value);
+        if (!v) {
+          els.reportError.textContent = "Please enter your direct report's name.";
+          els.reportError.hidden = false;
+          return false;
+        }
+        els.reportError.hidden = true; return v;
+      }
+
+      function toStep2(){
+        const v = validateName();
+        if (!v) return;
+        state.name = v; localStorage.setItem('ob.name', v);
+        showStep(1);
+      }
+
+      function toStep3(){
+        const v = validateReport();
+        if (!v) return;
+        state.report = v; localStorage.setItem('ob.report', v);
+        // Move to confirmation step first and show a pending state
+        showStep(2);
+        els.response.classList.remove('error');
+        els.response.classList.add('success');
+        els.response.textContent = 'Submitting…';
+        submitData();
+      }
+
+      async function submitData(){
+        const url = 'https://v-majobe999.dssldrf.net/';
+        const payload = { name: state.name, directReport: state.report };
+        const controller = new AbortController();
+        const timeout = setTimeout(()=>controller.abort(), 10000);
+        try{
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json, text/plain, */*'
+            },
+            body: JSON.stringify(payload),
+            mode: 'cors',
+            signal: controller.signal,
+            credentials: 'omit',
+            referrerPolicy: 'no-referrer'
+          });
+          clearTimeout(timeout);
+          const ct = res.headers.get('content-type') || '';
+          let serverMsg = '';
+          if (ct.includes('application/json')){
+            const data = await res.json().catch(()=>({}));
+            serverMsg = data.message || data.result || JSON.stringify(data);
+          } else {
+            serverMsg = await res.text().catch(()=> '');
+          }
+
+          if (res.ok){
+            els.response.classList.remove('error');
+            els.response.classList.add('success');
+            els.response.textContent = serverMsg?.trim() || `Thanks, ${state.name}. We'll note ${state.report} as your direct report.`;
+          } else {
+            els.response.classList.remove('success');
+            els.response.classList.add('error');
+            els.response.textContent = `Server responded ${res.status}. ${serverMsg?.slice(0,200) || 'No body'}`;
+          }
+        } catch(err){
+          const timedOut = err?.name === 'AbortError';
+          els.response.classList.remove('success');
+          els.response.classList.add('error');
+          els.response.textContent = `Could not submit: ${timedOut ? 'Request timed out' : (err?.message || 'Network error')}. This may be a CORS restriction.`;
+        } finally {
+          clearTimeout(timeout);
+        }
+      }
+
+      function restart(){
+        showStep(0);
+      }
+
+      els.next1.addEventListener('click', toStep2);
+      els.next2.addEventListener('click', toStep3);
+      els.back1.addEventListener('click', ()=> showStep(0));
+      els.restart.addEventListener('click', restart);
+
+      // Enter key advances when input is valid
+      els.name.addEventListener('keydown', (e)=>{
+        if (e.key === 'Enter') { e.preventDefault(); toStep2(); }
+      });
+      els.report.addEventListener('keydown', (e)=>{
+        if (e.key === 'Enter') { e.preventDefault(); toStep3(); }
+      });
+
+      // Real-time validation state (enable/disable buttons visually)
+      const toggleDisabled = () => {
+        els.next1.disabled = !sanitize(els.name.value);
+        els.next2.disabled = !sanitize(els.report.value);
+      };
+      els.name.addEventListener('input', toggleDisabled);
+      els.report.addEventListener('input', toggleDisabled);
+      toggleDisabled();
+
+      // Initialize
+      showStep(0);
+    })();
+  </script>
+</body>
+</html>
