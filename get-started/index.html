@@ -62,7 +62,7 @@
 
     label{ display:block; font-weight: 600; margin-bottom: .5rem }
     .input{
-      width:100%; autocomplete:"off"; padding: .8rem .9rem; border-radius: 12px; border: 1px solid color-mix(in oklab, var(--text) 14%, transparent);
+      width:100%; padding: .8rem .9rem; border-radius: 12px; border: 1px solid color-mix(in oklab, var(--text) 14%, transparent);
       background: color-mix(in oklab, var(--card) 85%, #000 15%); color: var(--text); outline: none;
     }
     .input:focus{ box-shadow: 0 0 0 4px color-mix(in oklab, var(--ring) 30%, transparent); border-color: var(--ring) }
@@ -88,10 +88,6 @@
   </style>
 </head>
 <body>
-  <header>
-    <img src="../RE1Mu3b.png" role="presentation" aria-hidden="true" style="overflow-x: visible; transition: none;">
-    <h1></h1>
-  </header>
   <main class="card" role="region" aria-labelledby="onboardTitle">
     <div class="header">
       <div class="logo" aria-hidden="true">◎</div>
@@ -109,7 +105,7 @@
       <section class="step" data-step="0" aria-labelledby="s1-title">
         <h2 id="s1-title" class="sr-only">Enter your name</h2>
         <label for="name">Your name</label>
-        <input id="name" class="input" name="name" type="text" placeholder="e.g., Ada Lovelace" required autocomplete="false"/>
+        <input id="name"$1autocomplete="off" autocapitalize="off" spellcheck="false" data-1p-ignore="true" data-lpignore="true"$2/>
         <p class="hint">We’ll use this to personalize your experience.</p>
         <p id="nameError" class="error" role="alert" hidden></p>
         <div class="actions">
@@ -121,8 +117,8 @@
       <section class="step" data-step="1" aria-labelledby="s2-title" hidden>
         <h2 id="s2-title" class="sr-only">Enter your direct report’s name</h2>
         <label for="report">Direct report</label>
-        <input id="report" class="input" name="report" type="text" placeholder="e.g., Grace Hopper" required autocomplete="false"/>
-        <p class="hint">Who is your immediate manager? (Can be found with enterprise people tool)</p>
+        <input id="report"$1autocomplete="off" autocapitalize="off" spellcheck="false" data-1p-ignore="true" data-lpignore="true"$2/>
+        <p class="hint">Who is your immediate enterprise manager?</p>
         <p id="reportError" class="error" role="alert" hidden></p>
         <div class="actions">
           <button class="btn secondary" id="back1" type="button">Back</button>
@@ -164,13 +160,9 @@
       };
 
       const state = {
-        name: localStorage.getItem('ob.name') || '',
-        report: localStorage.getItem('ob.report') || ''
+        name: '',
+        report: ''
       };
-
-      // Prefill if we have state
-      if (state.name) els.name.value = state.name;
-      if (state.report) els.report.value = state.report;
 
       let current = 0;
 
@@ -224,14 +216,14 @@
       function toStep2(){
         const v = validateName();
         if (!v) return;
-        state.name = v; localStorage.setItem('ob.name', v);
+        state.name = v;
         showStep(1);
       }
 
       function toStep3(){
         const v = validateReport();
         if (!v) return;
-        state.report = v; localStorage.setItem('ob.report', v);
+        state.report = v;
         // Move to confirmation step first and show a pending state
         showStep(2);
         els.response.classList.remove('error');
@@ -288,6 +280,9 @@
       }
 
       function restart(){
+        state.name = ''; state.report = '';
+        els.name.value = ''; els.report.value = '';
+        toggleDisabled();
         showStep(0);
       }
 
