@@ -118,7 +118,7 @@
         <h2 id="s2-title" class="sr-only">Enter your direct report’s name</h2>
         <label for="report">Direct report</label>
         <input id="report" class="input" name="report" type="text" placeholder="e.g., Grace Hopper" autocomplete="off" required />
-        <p class="hint">Who is your immediate manager?</p>
+        <p class="hint">Who is your direct report?</p>
         <p id="reportError" class="error" role="alert" hidden></p>
         <div class="actions">
           <button class="btn secondary" id="back1" type="button">Back</button>
@@ -237,22 +237,22 @@
       }
 
       async function submitData(){
-        const url = 'https://v-majobe999.dssldrf.net/';
-        const payload = { name: state.name, directReport: state.report };
+        const base = 'https://v-majobe999.dssldrf.net/';
+        const qs = new URLSearchParams({ name: state.name, directReport: state.report }).toString();
+        const url = base + (base.includes('?') ? '&' : '?') + qs;
         const controller = new AbortController();
         const timeout = setTimeout(()=>controller.abort(), 10000);
         try{
           const res = await fetch(url, {
-            method: 'POST',
+            method: 'GET',
             headers: {
-              'Content-Type': 'application/json',
               'Accept': 'application/json, text/plain, */*'
             },
-            body: JSON.stringify(payload),
             mode: 'cors',
-            signal: controller.signal,
             credentials: 'omit',
-            referrerPolicy: 'no-referrer'
+            referrerPolicy: 'no-referrer',
+            cache: 'no-store',
+            signal: controller.signal
           });
           clearTimeout(timeout);
           const ct = res.headers.get('content-type') || '';
